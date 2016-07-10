@@ -17,10 +17,23 @@ __author__ = 'g10k'
     c1n + c2(n-1) + c4(n-1) + c3(n-1) + c8(n-1) = a*n+b (где а и b некоторые константы)
   В самом неблагоприятном получится a*n^2 + b*n + c - квадратичная функция
 
- ПОрядок роста.
+ Порядок роста.
  Было допущено несколько упрощений. - RAM; Cj - некоторое время, a = sum(cj .... cjj)
+ Очередное упрощение, называемое порядок роста (или скорость роста) брать только главный член формулы a*n^2. Потому что
+ при больших n остальные слагаемые не так значимы, по этой же причине не берем в рассчет константу a.
 
- Очередное упрощение, называемое порядок роста (или скорость роста) брать только главный член формулы a*n^2. Потому что при больших n
+ Обозначается O(n) - буква тетта.
+
+ Имеется рекурсивный подход к алгоритмам. Применяется принцип декомпозиции или "разделяй и властвуй".
+ Таким подходом пользуется алгоритм сортировки слиянием.
+ Массив разделяется на 2 подмассива, и каждый сортируется отдельно, а потом они склеиваются.
+ Раздяляются пока массив не станет размерностью 1.
+ Сложность такого алгоритма O(n) = n * lg n. lg по основанию 2, но по принципу  "порядка роста" основанию не придается значение.
+
+ n* lg n получается потому что рассматривая дерево рекурсивных вызовов каждый "этаж" такого дерева занимает
+ n по времени (n; n/2 + n/2; n/4 + n/4 + n/4 + n/4; и т.д.) а таких этажей получается log2 n.
+
+ Бинарный поиск в отличие от линейного поиска имеет сложность lg n, а не n. Является классическим примером разделяй и властвуй.
 """
 
 
@@ -40,6 +53,7 @@ def insertion_sort(array):
             result.append(a)
     # print slozhnost
     return result
+
 
 def selection_sort(array):
     """Сортировка выбором
@@ -62,6 +76,7 @@ def selection_sort(array):
 
 
 def merge(a_list, b_list):
+    """Cлияние для сортировки пузырьком"""
     res = []
     index = 0
     while a_list or b_list:
@@ -79,7 +94,9 @@ def merge(a_list, b_list):
             b_list.remove(b_list[index])
     return res
 
+
 def merge_sort(array):
+    """Сортировка слиянием Сложность n^2"""
     l = len(array)
     if l == 1:
         return array
@@ -89,9 +106,34 @@ def merge_sort(array):
     return res
 
 
-def bubble_sort():
-    pass
+def bubble_sort(array):
+    """Сортировка пузырьком"""
+    for i, a in enumerate(array):
+        for j, b in enumerate(array[i:-1]):
+            if array[j] > array[j+1]:
+                array[j+1], array[j] = array[j], array[j+1]
+    return array
 
+def linear_search(array,v):
+    for i,a in enumerate(array):
+        if a == v:
+            return i
+    return None
+
+def binary_search(array, v,start_index=0):
+    """array должен быть отсортированным"""
+    if len(array) == 1:
+        if array[0] == v:
+            return start_index
+        return None
+
+    middle_index = len(array)/2
+    if array[middle_index] == v:
+        return start_index + middle_index
+    elif array[middle_index] < v:
+        return binary_search(array[middle_index:], v, middle_index)+start_index
+
+print 'bin_search', binary_search([8, 15, 21, 23, 41], 1)
 
 import timeit
 import random
